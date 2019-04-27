@@ -1,4 +1,7 @@
 import mensajeros.*
+import mensajero.*
+import paquete.*
+import destinos.*
 
 test "La mensajeria tiene a neo como empleado si lo agregarmos" {
 	mensajeria.contratar(neo)
@@ -11,3 +14,75 @@ test "Si neo es empleado, Hay un mensajero que puede enviar el paquete" {
 	paquete.destino(matrix)
 	assert.that(mensajeria.mensajeros().contains(neo))
 }
+
+test "Que roberto (90kg) puede llevar un paquete que está pago en un camión que tiene un acoplado." {
+	mensajeria.contratar(roberto)
+	paquete.pagar()
+	roberto.transporte(camion)
+	paquete.destino(puenteDeBroklin)
+	assert.that(puenteDeBroklin.dejaPasar(roberto))
+}
+
+test "Que neo con crédito no puede llevar un paquete que no está pago a la matrix." {
+	mensajeria.contratar(neo)
+	paquete.destino(matrix)
+	assert.notThat(matrix.dejaPasar(neo))
+}
+
+test "Despedir a un mensajero" {
+	mensajeria.contratar(roberto)
+	mensajeria.contratar(neo)
+	mensajeria.despedir(roberto)
+	assert.notThat(mensajeria.mensajeros().contains(roberto))
+}
+
+test"Despedir a todos los mensajeros"{
+	mensajeria.contratar(roberto)
+	mensajeria.contratar(neo)
+	mensajeria.contratar(chuckNorris)
+	mensajeria.despedirTodos()
+	assert.that(mensajeria.mensajeros().isEmpty())
+	}	
+	
+test"analizar si la mensajeria es grande (si tiene mas de dos mensajeros)"	{
+	mensajeria.contratar(roberto)
+	mensajeria.contratar(neo)
+	assert.that(mensajeria.esGrande())
+	}
+
+test"consultar si el paquete puede ser entregado por el primer empleado de la empresa de mensajería."{
+	mensajeria.contratar(roberto)
+	mensajeria.contratar(neo)
+	mensajeria.contratar(chuckNorris)
+	paquete.pagar()
+	roberto.transporte(camion)
+	paquete.destino(puenteDeBroklin)
+	assert.that(mensajeria.puedeSerEntreg())
+}	
+
+test"saber el peso del último mensajero de la empresa."{
+	mensajeria.contratar(roberto)
+	mensajeria.contratar(neo)
+	mensajeria.contratar(chuckNorris)
+	
+	assert.equals(900, mensajeria.pesoUltimoMensajero())
+}
+
+//Tercera Parte
+
+test"Si el paquete puede ser entregado por la empresa de mensajería, es decir, si al menos uno de sus mensajeros puede entregar el paquete."{
+	mensajeria.contratar(roberto)
+	mensajeria.contratar(neo)
+	mensajeria.contratar(chuckNorris)
+	paquete.pagar()
+	assert.that(mensajeria.puedeSerEntregadoPorAlgun())
+	}
+	
+test "Es facil cuando cualquier mensajero puede entregarlo"{
+	mensajeria.contratar(roberto)
+	mensajeria.contratar(neo)
+	mensajeria.contratar(chuckNorris)
+	paquete.pagar()
+	assert.that(mensajeria.esFacil())
+}	
+	
